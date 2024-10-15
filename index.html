@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Quiz Boi 1.1</title>
+	<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+	
+	<div id="menu">
+		<div id="backArrow" class="hidden unselectable"><--</div>
+		
+		<div id="mainMenu" class="menuWrapper">
+			<button id="navToAddData" class="main-button">Add Data</button>
+			<button id="navToQuizMe"  class="main-button">Quiz Me</button>
+			<button id="navToStats"   class="main-button">Stats</button>
+		</div>
+		
+		<div id="addDataMenu" class="menuWrapper hidden">
+			<button id="inputData" class="main-button">Add Data</button>
+
+			<div id="inputDataWrapper">
+				<textarea id="vocabInput" placeholder="Enter vocabulary (Chinese - Pinyin - English)"></textarea>
+				<textarea id="sourceInput" placeholder="Enter source text"></textarea>
+			 </div>
+		</div>
+		
+		<div id="quizMenu" class="menuWrapper hidden">
+			<div id="quizScreen"> <!-- This wrapper allows for flew-column -->
+				<div id="question"></div>
+				<div id="answerChoices">
+					<div id="answerAlpha" class="answer-block"></div>
+					<div id="answerBravo" class="answer-block"></div>
+					<div id="answerCharlie" class="answer-block"></div>
+					<div id="answerDelta" class="answer-block"></div>
+				</div>
+			</div>
+		</div>
+
+		<div id="nextQuestionMenu" class="menuWrapper hidden">
+			<button id="navToNextQuestion" class="main-button">Next  >>></button>
+		</div>
+		
+		<div id="statsMenu" class="menuWrapper hidden">
+			<div id="statsTableWrapper">
+				<div id="statsColumn">
+					<div class="cell">
+						<p id="currentStreak" class="statistic">Current Streak:</p>
+					</div>
+					<div class="cell">
+						<p id="currentStreakValue" class="statistic">0</p>
+					</div>
+					<div class="cell">
+						<p id="highStreak" class="statistic">High Streak:</p>
+					</div>
+					<div class="cell">
+						<p id="highStreakValue" class="statistic">0</p>
+					</div>
+					<div class="cell">
+						<p id="last50" class="statistic">Last 50:</p>
+					</div>
+					<div class="cell">
+						<p id="last50Value" class="statistic">0%</p>
+					</div>
+					<div class="cell">
+						<p id="allTime" class="statistic">All Time:</p>
+					</div>
+					<div class="cell">
+						<p id="allTimeValue" class="statistic">0%</p>
+					</div>
+				</div>
+				<div id="statsColumn">
+					<div class="cell"></div>
+					<div class="cell"></div>
+					<div class="cell"></div>
+					<div class="cell"></div>
+					<div class="cell"></div>
+					<div class="cell"></div>
+					<div class="cell"></div>
+					<div class="cell"></div>
+				</div>
+			</div>
+		</div>				
+
+		<div id="notificationBar" class="unselectable"></div>
+	</div>
+	<script src="scripts.js"></script>
+</body>

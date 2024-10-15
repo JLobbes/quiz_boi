@@ -1,0 +1,288 @@
+body {
+	height: 100vh;
+	width: 100vw;
+	margin: 0;
+	font-family: Arial, sans-serif;
+	color: #eee;
+}
+
+/* Main menu elements */
+
+#menu {
+	display: flex;
+	flex-direction: row;
+	justify-content: center; 
+	align-items: center;
+
+	position: relative;
+	top: 50%;
+	left: 50%;
+	width: 80%;
+	height: 40%;
+	max-width: 400px;
+	max-height: 200px;
+	background-color: #444;
+	transform: translate(-50%, -50%);
+	border-radius: 3px;
+}
+
+#backArrow { 
+	position: absolute;
+	top: -25px;
+	left: 0px;
+	width: 75px;
+	height: 20px;
+
+	background-color: #eee;
+	border-radius: 3px;
+	color: #444;
+	
+	text-align: center;
+
+	cursor: pointer;
+}
+
+#backArrow:hover { 
+	color: #eee;
+	background-color: #444;
+}
+
+.menuWrapper {
+	display: flex;
+	flex-direction: row;
+	justify-content: center; 
+	align-items: center;	
+
+	height: 100%;
+	width: 100%;
+}
+
+.main-button {
+	display: block;
+	
+	position: relative;
+	height: 75px;
+	width: 75px;
+	margin: 5px;
+
+	border: 3px solid #eee;
+	border-radius: 3px;
+	background-color: #444;
+
+	font-family: Arial, sans-serif;
+	color: #eee;
+	font-size: 1.25em;
+}
+
+.main-button:hover {
+	background-color: #666;
+}
+
+/* Add data elements */
+
+#inputDataWrapper {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-around;
+	align-items: center;
+
+	height: 60%;
+	margin: 5px;
+
+	color: #eee;
+}
+
+textarea {
+	height: 40%;
+	width: 100%;
+
+	border: 2px solid #eee;
+	border-radius: 3px;
+	background-color: #666;
+
+	color: #eee;
+}
+
+textarea::placeholder {
+	color: #eee; 
+}
+
+/* Quiz menu elements */
+
+#quizScreen {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-evenly; 
+	align-items: center;
+
+	height: 100%;
+	width: 100%;
+}
+
+#question {
+	display: flex;
+	flex-direction: row;
+	justify-content: center; 
+	align-items: center;
+
+	width: 95%;
+	height: 35%;
+
+	overflow: hidden;
+}
+
+#question p {
+	margin: 0;
+}
+
+#answerChoices {
+	display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 10px;
+
+    width: 90%;
+    height: 45%;
+	margin-top: 5px;
+}
+
+.answer-block {
+	display: flex;
+	flex-direction: row;
+	justify-content: center; 
+	align-items: center;
+	flex-wrap: wrap;
+
+	width: 100%;
+	height: 100%;
+
+	border: #eee solid 2px;
+	border-radius: 3px;
+	box-sizing: border-box;
+}
+
+.answer-block:hover {
+	background-color: #666;
+	animation: jiggle 0.2s linear 2;
+
+	cursor: pointer;
+}
+
+.answer-block p {
+	margin: 0;
+}
+
+@keyframes jiggle {
+	0% {
+		transform: rotate(0deg);
+	}
+
+	50% {
+		transform: rotate(1.5deg);
+	}
+
+	80% {
+		transform: rotate(-1.5deg);
+	}
+
+	100% {
+		transform: rotate(0deg);
+	}
+}
+
+/* Stats menu elements */
+#statsTableWrapper {
+	display: flex;
+	flex-direction: column;
+	justify-content: center; 
+	align-items: center;
+	flex-wrap: wrap;
+
+	width: 100%;
+	height: 100%;
+}
+
+#statsColumn {
+	display: grid;
+    grid-template-columns: 3fr 1fr;
+
+    width: 48%;
+    height: 98%;
+
+	box-sizing: border-box;
+}
+
+.cell {
+	display: flex;
+	flex-direction: row;
+	justify-content: center; 
+	align-items: center;
+	
+	width: 97%;
+	height: 97%;
+	
+	border: #eee solid 2px;
+	border-radius: 3px;
+	box-sizing: border-box;
+
+	overflow: hidden;
+}
+
+.statistic {
+	display: flex;
+	flex-direction: row;
+	justify-content: center; 
+	align-items: center;
+	
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	
+	border-radius: 3px;
+	box-sizing: border-box;
+}
+
+
+/* Communication elements */
+
+#notificationBar {
+	display: flex;
+	flex-direction: row;
+	justify-content: center; 
+	align-items: center;
+
+	position: absolute;
+	top: calc(100% + 5px);
+	left: 0px;
+	height: 30px;
+	width: 100%;
+
+	background-color: #eee;
+	border-radius: 3px;
+	overflow: hidden;
+
+	color: #444;
+}
+
+.notification {
+    position: absolute;
+    white-space: nowrap;
+    animation: scroll 2.5s linear forwards;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+.hidden {
+	display: none;
+}
+
+.unselectable {
+	user-select: none;
+}
