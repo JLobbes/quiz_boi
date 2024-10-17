@@ -192,7 +192,12 @@ class QuizzBoi {
 				const randomVocab = this.getRandomVocab();
 				randomAnswer = randomVocab['chinese'];
 
-			} while (this.currentQuestionData['targetWord']['chinese'] === randomAnswer);
+			} while (
+				// Check for duplicate answers and re-draw if present
+				this.currentQuestionData['chinese'].includes(randomAnswer) 
+				||
+				this.currentQuestionData['targetWord']['chinese'] === randomAnswer
+			);
 			this.currentQuestionData['chinese'].push(randomAnswer);
 		}
 
@@ -216,7 +221,12 @@ class QuizzBoi {
 				const randomVocab = this.getRandomVocab();
 				randomAnswer = randomVocab['english'];
 
-			} while (this.currentQuestionData['targetWord']['english'] === randomAnswer);
+			} while (
+				// Check for duplicate answers and re-draw if present
+				this.currentQuestionData['english'].includes(randomAnswer) 
+				||
+				this.currentQuestionData['targetWord']['english'] === randomAnswer
+			);
 			this.currentQuestionData['english'].push(randomAnswer);
 		}
 
