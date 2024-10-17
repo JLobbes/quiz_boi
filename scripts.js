@@ -468,6 +468,7 @@ class QuizzBoi {
 		document.getElementById('highStreakValue').textContent = this.stats.highestStreak;
 		document.getElementById('last50Value').textContent = `${this.stats.last50}%`;
 		document.getElementById('allTimeValue').textContent = `${this.stats.overallPercentage}%`;
+		document.getElementById('questionCountValue').textContent = `${this.stats.history.length}`;
 	}
 	
 	loadStats() {
