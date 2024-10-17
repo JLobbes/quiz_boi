@@ -408,9 +408,11 @@ class QuizzBoi {
 		// Handle highest streak
 		if (this.stats.currentStreak > this.stats.highestStreak) {
 			this.stats.highestStreak = this.stats.currentStreak;
-			this.showNotification(`🐙🍩 New High Streak: ${this.stats.highestStreak}! 🦄🐢`);
-		} else if (milestoneMessage) {
-			this.showNotification(milestoneMessage);
+			if(milestoneMessage) {
+				this.showNotification(milestoneMessage);
+			} else {
+				this.showNotification(`🐙🍩 New High Streak: ${this.stats.highestStreak}! 🦄🐢`);
+			}
 		} else {
 			this.showNotification(`Current Streak Extended to ... (${this.stats.currentStreak})`);
 		}
