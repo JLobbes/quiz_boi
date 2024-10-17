@@ -41,6 +41,9 @@ class QuizzBoi {
 		
 		const navToStats = document.getElementById('navToStats');
 		navToStats.addEventListener('click', this.navigateToStats.bind(this));
+		
+		const navToSettings = document.getElementById('navToSettings');
+		navToSettings.addEventListener('click', this.navigateToSettings.bind(this));
 
 		const quizButtons = document.querySelectorAll('.answer-block');
 		quizButtons.forEach(button => {
@@ -481,6 +484,8 @@ class QuizzBoi {
 		const mainMenu = document.getElementById('mainMenu');
 		mainMenu.classList.remove('hidden');
 
+		const settingsButton = document.getElementById('navToSettings');
+		settingsButton.classList.remove('hidden');
 	}
 
 	navigateToQuiz() {
@@ -510,11 +515,19 @@ class QuizzBoi {
 		statsMenu.classList.remove('hidden');
 	}
 
+	navigateToSettings() {
+		this.hideAllMenus();
+		this.showReturnHomeBtn();
+	}
+
 	hideAllMenus() {
 		const menus = document.querySelectorAll('.menuWrapper');
 		menus.forEach(menu => {
 			menu.classList.add('hidden');
 		});
+
+		const settingsButton = document.getElementById('navToSettings');
+		settingsButton.classList.add('hidden');
 	}
 
 	showReturnHomeBtn() {

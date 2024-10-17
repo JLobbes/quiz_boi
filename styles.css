@@ -42,6 +42,12 @@ body {
 	cursor: pointer;
 }
 
+#navToSettings {
+	position: absolute;
+	right: 0px;
+	bottom: 0px;
+}
+
 #backArrow:hover { 
 	color: #eee;
 	background-color: #444;
@@ -72,10 +78,33 @@ body {
 	font-family: Arial, sans-serif;
 	color: #eee;
 	font-size: 1.25em;
+	text-align: center;
 }
 
 .main-button:hover {
 	background-color: #666;
+}
+
+.minor-button {
+	display: flex;
+	flex-direction: row;
+	justify-content: center; 
+	align-items: center;	
+
+	height: 1em;
+	width: 1em;
+	margin: 0.25em;
+
+	border-radius: 3px;
+
+	text-align: center;
+}
+
+.minor-button:hover {
+	background-color: #eee;
+	color: #444;
+
+	cursor: pointer;
 }
 
 /* Add data elements */
@@ -191,6 +220,7 @@ textarea::placeholder {
 }
 
 /* Stats menu elements */
+
 #statsTableWrapper {
 	display: flex;
 	flex-direction: column;
@@ -205,6 +235,7 @@ textarea::placeholder {
 #statsColumn {
 	display: grid;
     grid-template-columns: 3fr 1fr;
+	grid-template-rows: 1fr 1fr 1fr 1fr;
 
     width: 48%;
     height: 98%;
