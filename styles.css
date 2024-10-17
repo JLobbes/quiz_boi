@@ -319,3 +319,16 @@ textarea::placeholder {
 .unselectable {
 	user-select: none;
 }
+
+/* Streak Counter Bar */
+#streakCounter {
+	display: block;
+
+	position: absolute;
+	bottom: 0px;
+	right: -0.70em;
+	width: 0.5em;
+	
+	border-radius: 3px;
+	background-color: #444;
+}

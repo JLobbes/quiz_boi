@@ -469,6 +469,11 @@ class QuizzBoi {
 		document.getElementById('last50Value').textContent = `${this.stats.last50}%`;
 		document.getElementById('allTimeValue').textContent = `${this.stats.overallPercentage}%`;
 		document.getElementById('questionCountValue').textContent = `${this.stats.history.length}`;
+
+		if(this.stats.highestStreak > 0) {
+			const streakCounter = Math.round((this.stats.currentStreak / this.stats.highestStreak) * 100);
+			document.getElementById('streakCounter').style.height = `${streakCounter}%`;
+		}
 	}
 	
 	loadStats() {
