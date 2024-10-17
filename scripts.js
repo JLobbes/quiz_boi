@@ -47,8 +47,13 @@ class QuizzBoi {
 
 		const quizButtons = document.querySelectorAll('.answer-block');
 		quizButtons.forEach(button => {
+			button.addEventListener('keydown', (event) => {
+				if (event.key === 'Enter') {
+					this.checkAnswer(button);
+				}
+			});
 			button.addEventListener('click', this.checkAnswer.bind(this, button));
-		})
+		});
 	}
 
 
