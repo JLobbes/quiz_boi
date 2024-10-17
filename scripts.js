@@ -462,6 +462,8 @@ class QuizzBoi {
 
 		const savedStats = localStorage.getItem('stats');
 		this.stats = savedStats ? JSON.parse(savedStats) : blankStats;
+
+		this.renderStatistics();
 	}
 
 	saveStats() {
