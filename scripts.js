@@ -201,7 +201,11 @@ class QuizzBoi {
 			let plausibleVariation;
 			do {
 				plausibleVariation = this.getPlausiblePinyinVariations(this.currentQuestionData.targetWord['pinYin']);
-			} while (this.currentQuestionData['pinYin'].includes(plausibleVariation));
+			} while (
+				this.currentQuestionData['pinYin'].includes(plausibleVariation)
+				||
+				this.currentQuestionData.targetWord['pinYin'] === plausibleVariation
+			);
 			this.currentQuestionData['pinYin'].push(plausibleVariation);
 		}
 
