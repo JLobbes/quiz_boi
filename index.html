@@ -45,7 +45,7 @@
 		
 		<div id="statsMenu" class="menuWrapper hidden">
 			<div id="statsTableWrapper">
-				<div id="statsColumn">
+				<div class="stats-column">
 					<div class="cell">
 						<p id="currentStreak" class="statistic">Current Streak:</p>
 					</div>
@@ -71,7 +71,7 @@
 						<p id="allTimeValue" class="statistic">0%</p>
 					</div>
 				</div>
-				<div id="statsColumn">
+				<div class="stats-column">
 					<div class="cell">
 						<p id="questionCount" class="statistic">Question Count:</p>
 					</div>
@@ -83,7 +83,21 @@
 		</div>		
 		
 		<div id="settingsMenu" class="menuWrapper hidden">
-
+			<div id="settingsTableWrapper">
+				<div class="setting">
+					<div id="quizModeOption" class="setting-description">
+						<p>Quiz Mode:</p>
+					</div>
+					<label>
+						<input type="radio" name="mode" id="mode-eng" value="english" checked>
+						Eng.
+					</label>
+					<label>
+						<input type="radio" name="mode" id="mode-zh" value="chinese">
+						Chn.
+					</label>
+				</div>
+			</div>
 		</div>
 
 		<div id="streakCounter"></div>

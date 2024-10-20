@@ -209,12 +209,17 @@ class QuizzBoi {
 		// Add plausible incorrect pin yin to answer possibilities
 		for (let i = 0; i < 4; i++) {
 			let plausibleVariation;
+			let attempts = 0;
+			const maxAttempts = 10;
+
 			do {
 				plausibleVariation = this.getPlausiblePinyinVariations(this.currentQuestionData.targetWord['pinYin']);
+				console.log('pinYin:', plausibleVariation);
+				attempts++;
 			} while (
-				this.currentQuestionData['pinYin'].includes(plausibleVariation)
-				||
-				this.currentQuestionData.targetWord['pinYin'] === plausibleVariation
+				(this.currentQuestionData['pinYin'].includes(plausibleVariation) || 
+        		this.currentQuestionData.targetWord['pinYin'] === plausibleVariation) &&
+        		attempts < maxAttempts
 			);
 			this.currentQuestionData['pinYin'].push(plausibleVariation);
 		}
@@ -547,6 +552,9 @@ class QuizzBoi {
 	navigateToSettings() {
 		this.hideAllMenus();
 		this.showReturnHomeBtn();
+
+		const settingsMenu = document.getElementById('settingsMenu');
+		settingsMenu.classList.remove('hidden');
 	}
 
 	hideAllMenus() {
