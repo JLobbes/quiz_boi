@@ -209,17 +209,13 @@ class QuizzBoi {
 		// Add plausible incorrect pin yin to answer possibilities
 		for (let i = 0; i < 4; i++) {
 			let plausibleVariation;
-			let attempts = 0;
-			const maxAttempts = 10;
-
 			do {
 				plausibleVariation = this.getPlausiblePinyinVariations(this.currentQuestionData.targetWord['pinYin']);
 				console.log('pinYin:', plausibleVariation);
-				attempts++;
 			} while (
-				(this.currentQuestionData['pinYin'].includes(plausibleVariation) || 
-        		this.currentQuestionData.targetWord['pinYin'] === plausibleVariation) &&
-        		attempts < maxAttempts
+				(this.currentQuestionData['pinYin'].includes(plausibleVariation) 
+				|| 
+        		this.currentQuestionData.targetWord['pinYin'] === plausibleVariation) 
 			);
 			this.currentQuestionData['pinYin'].push(plausibleVariation);
 		}
@@ -257,61 +253,115 @@ class QuizzBoi {
 		return { ...this.vocabulary[randomIndex] }; // Return a shallow copy of the random object
 	}
 	
-	getPlausiblePinyinVariations(correctPinyin) {
-		let pinyin = correctPinyin;
-		const toneMap = {
-			'ā': ['á', 'ǎ', 'à'],
-			'á': ['ā', 'ǎ', 'à'],
-			'ǎ': ['ā', 'á', 'à'],
-			'à': ['ā', 'á', 'ǎ'],
-			'ō': ['ó', 'ǒ', 'ò'],
-			'ó': ['ō', 'ǒ', 'ò'],
-			'ǒ': ['ō', 'ó', 'ò'],
-			'ò': ['ō', 'ó', 'ǒ'],
-			'ē': ['é', 'ě', 'è'],
-			'é': ['ē', 'ě', 'è'],
-			'ě': ['ē', 'é', 'è'],
-			'è': ['ē', 'é', 'ě'],
-			'ī': ['í', 'ǐ', 'ì'],
-			'í': ['ī', 'ǐ', 'ì'],
-			'ǐ': ['ī', 'í', 'ì'],
-			'ì': ['ī', 'í', 'ǐ'],
-			'ū': ['ú', 'ǔ', 'ù'],
-			'ú': ['ū', 'ǔ', 'ù'],
-			'ǔ': ['ū', 'ú', 'ù'],
-			'ù': ['ū', 'ú', 'ǔ'],
-			'ǖ': ['ǘ', 'ǚ', 'ǜ'],
-			'ǘ': ['ǖ', 'ǚ', 'ǜ'],
-			'ǚ': ['ǖ', 'ǘ', 'ǜ'],
-			'ǜ': ['ǖ', 'ǘ', 'ǚ']
+	getPlausiblePinyinVariations(originalPinYin) {
+		const toneVariations = {
+			'ā': ['á', 'ǎ', 'à', 'ā'],
+			'á': ['ā', 'ǎ', 'à', 'á'],
+			'ǎ': ['ā', 'á', 'à', 'ǎ'],
+			'à': ['ā', 'á', 'ǎ', 'à'],
+			'ō': ['ó', 'ǒ', 'ò', 'ō'],
+			'ó': ['ō', 'ǒ', 'ò', 'ó'],
+			'ǒ': ['ō', 'ó', 'ò', 'ǒ'],
+			'ò': ['ō', 'ó', 'ǒ', 'ò'],
+			'ē': ['é', 'ě', 'è', 'ē'],
+			'é': ['ē', 'ě', 'è', 'é'],
+			'ě': ['ē', 'é', 'è', 'ě'],
+			'è': ['ē', 'é', 'ě', 'è'],
+			'ī': ['í', 'ĭ', 'ì', 'ī'],
+			'í': ['ī', 'ĭ', 'ì', 'í'],
+			'ĭ': ['ī', 'í', 'ì', 'ĭ'],
+			'ì': ['ī', 'í', 'ĭ', 'ì'],
+			'ū': ['ú', 'ǔ', 'ù', 'ū'],
+			'ú': ['ū', 'ǔ', 'ù', 'ú'],
+			'ǔ': ['ū', 'ú', 'ù', 'ǔ'],
+			'ù': ['ū', 'ú', 'ǔ', 'ù'],
+			'ǖ': ['ǘ', 'ǚ', 'ǜ', 'ǖ'],
+			'ǘ': ['ǖ', 'ǚ', 'ǜ', 'ǘ'],
+			'ǚ': ['ǖ', 'ǘ', 'ǜ', 'ǚ'],
+			'ǜ': ['ǖ', 'ǘ', 'ǚ', 'ǜ']
 		};
 	
-		let vowelPositions = [];
-		let changesLeft = Math.floor(Math.random() * 4) + 1; // 1 to 4 changes
+		const targetVowels = [];
 	
-		// Identify vowels and their positions
-		for (let i = 0; i < pinyin.length; i++) {
-			if (toneMap[pinyin[i]]) {
-				vowelPositions.push(i);
+		// Identify and store target vowels
+		for (let i = 0; i < originalPinYin.length; i++) {
+			const char = originalPinYin[i];
+			if (toneVariations[char]) {
+				targetVowels.push({ character: char, index: i });
 			}
 		}
+		
+		let alteredPinYin = originalPinYin;
 	
 		// Perform tone swaps
-		while (changesLeft > 0 && vowelPositions.length > 0) {
-			const index = Math.floor(Math.random() * vowelPositions.length);
-			const vowelIndex = vowelPositions[index];
-			const originalVowel = pinyin[vowelIndex];
-			
-			if (toneMap[originalVowel]) {
-				const possibleVariations = toneMap[originalVowel];
-				const newVowel = possibleVariations[Math.floor(Math.random() * possibleVariations.length)];
-				pinyin = pinyin.slice(0, vowelIndex) + newVowel + pinyin.slice(vowelIndex + 1);
-				changesLeft--;
+		do {
+			for (const vowel of targetVowels) {
+				const possibleVariations = toneVariations[vowel.character];
+				if (possibleVariations) {
+					const newVowel = possibleVariations[Math.floor(Math.random() * possibleVariations.length)];
+					alteredPinYin = alteredPinYin.slice(0, vowel.index) + newVowel + alteredPinYin.slice(vowel.index + 1);
+				}
 			}
-		}
-	
-		return pinyin;
+		} while (alteredPinYin === originalPinYin);
+		
+		return alteredPinYin;
 	}
+	
+	// getPlausiblePinyinVariations(correctPinyin) {
+	// 	let pinyin = correctPinyin;
+	// 	const toneMap = {
+	// 		'ā': ['á', 'ǎ', 'à'],
+	// 		'á': ['ā', 'ǎ', 'à'],
+	// 		'ǎ': ['ā', 'á', 'à'],
+	// 		'à': ['ā', 'á', 'ǎ'],
+	// 		'ō': ['ó', 'ǒ', 'ò'],
+	// 		'ó': ['ō', 'ǒ', 'ò'],
+	// 		'ǒ': ['ō', 'ó', 'ò'],
+	// 		'ò': ['ō', 'ó', 'ǒ'],
+	// 		'ē': ['é', 'ě', 'è'],
+	// 		'é': ['ē', 'ě', 'è'],
+	// 		'ě': ['ē', 'é', 'è'],
+	// 		'è': ['ē', 'é', 'ě'],
+	// 		'ī': ['í', 'ǐ', 'ì'],
+	// 		'í': ['ī', 'ǐ', 'ì'],
+	// 		'ǐ': ['ī', 'í', 'ì'],
+	// 		'ì': ['ī', 'í', 'ǐ'],
+	// 		'ū': ['ú', 'ǔ', 'ù'],
+	// 		'ú': ['ū', 'ǔ', 'ù'],
+	// 		'ǔ': ['ū', 'ú', 'ù'],
+	// 		'ù': ['ū', 'ú', 'ǔ'],
+	// 		'ǖ': ['ǘ', 'ǚ', 'ǜ'],
+	// 		'ǘ': ['ǖ', 'ǚ', 'ǜ'],
+	// 		'ǚ': ['ǖ', 'ǘ', 'ǜ'],
+	// 		'ǜ': ['ǖ', 'ǘ', 'ǚ']
+	// 	};
+	
+	// 	let vowelPositions = [];
+	// 	let changesLeft = Math.floor(Math.random() * 4) + 1; // 1 to 4 changes
+	
+	// 	// Identify vowels and their positions
+	// 	for (let i = 0; i < pinyin.length; i++) {
+	// 		if (toneMap[pinyin[i]]) {
+	// 			vowelPositions.push(i);
+	// 		}
+	// 	}
+	
+	// 	// Perform tone swaps
+	// 	while (changesLeft > 0 && vowelPositions.length > 0) {
+	// 		const index = Math.floor(Math.random() * vowelPositions.length);
+	// 		const vowelIndex = vowelPositions[index];
+	// 		const originalVowel = pinyin[vowelIndex];
+			
+	// 		if (toneMap[originalVowel]) {
+	// 			const possibleVariations = toneMap[originalVowel];
+	// 			const newVowel = possibleVariations[Math.floor(Math.random() * possibleVariations.length)];
+	// 			pinyin = pinyin.slice(0, vowelIndex) + newVowel + pinyin.slice(vowelIndex + 1);
+	// 			changesLeft--;
+	// 		}
+	// 	}
+	
+	// 	return pinyin;
+	// }
 	
 		
 
