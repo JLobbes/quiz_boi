@@ -80,7 +80,7 @@ body {
 	font-size: 1.25em;
 	text-align: center;
 
-	user-select: all;
+	cursor: pointer;
 }
 
 .main-button:hover {
