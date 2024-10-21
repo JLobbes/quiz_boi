@@ -307,64 +307,6 @@ class QuizzBoi {
 		return alteredPinYin;
 	}
 	
-	// getPlausiblePinyinVariations(correctPinyin) {
-	// 	let pinyin = correctPinyin;
-	// 	const toneMap = {
-	// 		'ā': ['á', 'ǎ', 'à'],
-	// 		'á': ['ā', 'ǎ', 'à'],
-	// 		'ǎ': ['ā', 'á', 'à'],
-	// 		'à': ['ā', 'á', 'ǎ'],
-	// 		'ō': ['ó', 'ǒ', 'ò'],
-	// 		'ó': ['ō', 'ǒ', 'ò'],
-	// 		'ǒ': ['ō', 'ó', 'ò'],
-	// 		'ò': ['ō', 'ó', 'ǒ'],
-	// 		'ē': ['é', 'ě', 'è'],
-	// 		'é': ['ē', 'ě', 'è'],
-	// 		'ě': ['ē', 'é', 'è'],
-	// 		'è': ['ē', 'é', 'ě'],
-	// 		'ī': ['í', 'ǐ', 'ì'],
-	// 		'í': ['ī', 'ǐ', 'ì'],
-	// 		'ǐ': ['ī', 'í', 'ì'],
-	// 		'ì': ['ī', 'í', 'ǐ'],
-	// 		'ū': ['ú', 'ǔ', 'ù'],
-	// 		'ú': ['ū', 'ǔ', 'ù'],
-	// 		'ǔ': ['ū', 'ú', 'ù'],
-	// 		'ù': ['ū', 'ú', 'ǔ'],
-	// 		'ǖ': ['ǘ', 'ǚ', 'ǜ'],
-	// 		'ǘ': ['ǖ', 'ǚ', 'ǜ'],
-	// 		'ǚ': ['ǖ', 'ǘ', 'ǜ'],
-	// 		'ǜ': ['ǖ', 'ǘ', 'ǚ']
-	// 	};
-	
-	// 	let vowelPositions = [];
-	// 	let changesLeft = Math.floor(Math.random() * 4) + 1; // 1 to 4 changes
-	
-	// 	// Identify vowels and their positions
-	// 	for (let i = 0; i < pinyin.length; i++) {
-	// 		if (toneMap[pinyin[i]]) {
-	// 			vowelPositions.push(i);
-	// 		}
-	// 	}
-	
-	// 	// Perform tone swaps
-	// 	while (changesLeft > 0 && vowelPositions.length > 0) {
-	// 		const index = Math.floor(Math.random() * vowelPositions.length);
-	// 		const vowelIndex = vowelPositions[index];
-	// 		const originalVowel = pinyin[vowelIndex];
-			
-	// 		if (toneMap[originalVowel]) {
-	// 			const possibleVariations = toneMap[originalVowel];
-	// 			const newVowel = possibleVariations[Math.floor(Math.random() * possibleVariations.length)];
-	// 			pinyin = pinyin.slice(0, vowelIndex) + newVowel + pinyin.slice(vowelIndex + 1);
-	// 			changesLeft--;
-	// 		}
-	// 	}
-	
-	// 	return pinyin;
-	// }
-	
-		
-
 	blankOutTargetWord(line, targetWord) {
 		const regex = new RegExp(targetWord, 'g'); // Create a regex for the target word
 		return line.replace(regex, '__'); // Replace the target word with blanks
@@ -424,6 +366,7 @@ class QuizzBoi {
 				this.renderQuiz();
 			}, 400);
 		} else {
+			if(this.incorrectEmojis.index > 2) this.incorrectEmojis.index--;
 			targetButton.innerHTML = `<p>${this.incorrectEmojis.emojis[this.incorrectEmojis.index]}</p>`
 			this.incorrectEmojis.index++;
 		}
