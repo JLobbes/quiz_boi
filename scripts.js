@@ -23,10 +23,13 @@ class QuizzBoi {
 			emojis:['😟','😞','😭'] 
 		};
 
-		// Adjustable options
+		// Settings
 		this.numOfStages = 3;  // Quantity of stages per given question
-		this.pinYinOn = false; // Create variations of correct pin yin
-
+		this.loadQuizStageQuantity();
+		
+		this.hardPinYinOn = false; // Create variations of correct pin yin
+		this.loadPinYinMode();
+		this.settingUpdateInProgress = false;
 	}
 
 	loadListeners() { 
@@ -50,6 +53,13 @@ class QuizzBoi {
 		
 		const navToSettings = document.getElementById('navToSettings');
 		navToSettings.addEventListener('click', this.navigateToSettings.bind(this));
+
+		const stageQuantityOptionBts = document.querySelectorAll('.setting-options label');
+		stageQuantityOptionBts.forEach(button => {
+			button.addEventListener('click', (event) => {
+				this.handleSettingUpdate(button.firstElementChild);
+			});
+		});
 
 		const quizButtons = document.querySelectorAll('.answer-block');
 		quizButtons.forEach(button => {
@@ -248,6 +258,15 @@ class QuizzBoi {
 			const randomVocab = this.getRandomVocab();
 			randomAnswer = randomVocab[`${targetStage}Data`];
 
+			if(targetStage === 'stageTwo' && this.hardPinYinOn) {
+				try {
+					randomAnswer = this.getPlausiblePinyinVariations(this.currentQuestionData['targetWord'][`${targetStage}Data`]);				
+				}
+				catch(error) {
+					console.error('Your second stage data include words without pin yin tones. Hard Pin Yin mode must be turned off');
+					this.updatePinYinMode('off');
+				}
+			}
 		} while (
 			// Check for duplicate answers and re-draw if present
 			this.currentQuestionData[`${targetStage}Answers`].includes(randomAnswer) 
@@ -328,7 +347,7 @@ class QuizzBoi {
 		}
 		const currentStage = stages[this.currentStage]; // Turns number into readable string
 
-		const quizFinished = this.currentStage > 3; 
+		const quizFinished = this.currentStage > this.numOfStages; 
 		if(quizFinished) {
 			this.navigateToNextQuestion(); 
 			return;
@@ -606,4 +625,49 @@ class QuizzBoi {
 		});
 	}
 	
+	// Settings Logic
+
+	handleSettingUpdate(button) {
+		// this.settingUpdateInProgress logic prevents event bubbling and double calling
+		if (this.settingUpdateInProgress) return;
+		this.settingUpdateInProgress = true;
+	
+		if(button.name === 'stageQuantity') this.updateQuizStageQuantity(button.value);
+		if(button.name === 'pinYinMode') this.updatePinYinMode(button.value);
+
+	
+		setTimeout(() => {
+			this.settingUpdateInProgress = false; // Reset the flag
+		}, 300); 
+	}
+
+	updateQuizStageQuantity(newQuantity) {
+		this.numOfStages = newQuantity;
+		this.showNotification(`Quiz Boi now has ${this.numOfStages} stage(s).`);
+		this.saveQuizStageQuantity();
+	}
+
+	loadQuizStageQuantity() {
+		const numOfStages = localStorage.getItem('numOfStages');
+		this.numOfStages = numOfStages ? JSON.parse(numOfStages) : 3;
+	}
+
+	saveQuizStageQuantity() {
+		localStorage.setItem('numOfStages', JSON.stringify(this.numOfStages));
+	}
+
+	updatePinYinMode(newMode) {
+		this.hardPinYinOn = (newMode === 'on') ? true : false;
+		this.showNotification(`Difficult pin yin mode is now ${newMode}. Ensure PinYin data is as second stage.`);
+		this.savePinYinMode();
+	}
+
+	loadPinYinMode() {
+		const hardPinYinOn = localStorage.getItem('hardPinYin');
+		this.hardPinYinOn = hardPinYinOn ? JSON.parse(hardPinYinOn) : false;
+	}
+
+	savePinYinMode() {
+		localStorage.setItem('hardPinYin', JSON.stringify(this.hardPinYinOn));
+	}
 }

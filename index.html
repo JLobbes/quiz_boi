@@ -84,14 +84,38 @@
 		
 		<div id="settingsMenu" class="menuWrapper hidden">
 			<div id="settingsTableWrapper">
-				<div class="setting">
-					<div id="quizStageQuantity" class="setting-description">
-						<p>Quanity of Stages:</p>
+				<div class="setting" id="stageQuantitySelection">
+					<div class="setting-description">
+						<p>Number of Stages:</p>
 					</div>
 					<div class="setting-options">
 						<label>
-							<input type="radio" name="stageQuantity" id="mode-eng" value="english" checked>
+							<input type="radio" name="stageQuantity" id="stageQuantityOne" value="1">
 							1
+						</label>
+						<label>
+							<input type="radio" name="stageQuantity" id="stageQuantityTwo" value="2">
+							2
+						</label>
+						<label>
+							<input type="radio" name="stageQuantity" id="stageQuantityThree" value="3">
+							3	
+						</label>
+					</div>
+				</div>
+
+				<div class="setting" id="difficultPinYinSelecton">
+					<div class="setting-description">
+						<p>Difficult PinYin Mode:</p>
+					</div>
+					<div class="setting-options">
+						<label>
+							<input type="radio" name="pinYinMode" id="pinYinModeOn" value="on">
+							On
+						</label>
+						<label>
+							<input type="radio" name="pinYinMode" id="pinYinModeOff" value="off">
+							Off
 						</label>
 					</div>
 				</div>

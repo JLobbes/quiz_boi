@@ -280,11 +280,11 @@ textarea::placeholder {
 #settingsTableWrapper {
 	display: flex;
 	flex-direction: column;
-	justify-content: center; 
+	justify-content: flex-start; 
 	align-items: center;
 
 	width: 100%;
-	height: fit-content;
+	height: 100%;
 	overflow-y: scroll;
 
 	box-sizing: border-box;
@@ -305,7 +305,8 @@ textarea::placeholder {
 	margin: 0.25em;
 	
 	border-radius: 3px;
-	border: #eee groove 5px;
+	border-top: #eee dotted 1px;
+	border-bottom: #eee dotted 1px;
 	box-sizing: border-box;
 }
 
@@ -327,6 +328,31 @@ textarea::placeholder {
 	align-items: center;
 
 	width: 50%;
+}
+
+.setting-options label {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-evenly;
+	align-items: center;
+
+	width: fit-content;
+	height: 1.5em;
+	padding: 0.25em;
+	margin-right: 0.25em;
+
+	border: #eee solid 2px ;
+	border-radius: 3px;
+	
+	cursor: pointer;
+}
+
+.setting-options label:hover {
+	background-color: #666;
+}
+
+.setting-options label input {
+	margin: 0 0.4em 0 0;
 }
 
 .setting p {
@@ -386,6 +412,7 @@ textarea::placeholder {
 }
 
 /* Streak Counter Bar */
+
 #streakCounter {
 	display: block;
 
