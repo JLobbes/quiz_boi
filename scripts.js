@@ -54,10 +54,17 @@ class QuizzBoi {
 		const navToSettings = document.getElementById('navToSettings');
 		navToSettings.addEventListener('click', this.navigateToSettings.bind(this));
 
-		const stageQuantityOptionBts = document.querySelectorAll('.setting-options label');
-		stageQuantityOptionBts.forEach(button => {
+		const setingsBts = document.querySelectorAll('.setting-options label');
+		setingsBts.forEach(button => {
 			button.addEventListener('click', (event) => {
 				this.handleSettingUpdate(button.firstElementChild);
+			});
+		});
+
+		const clearDataBtns = document.querySelectorAll('.setting-options button');
+		clearDataBtns.forEach(button => {
+			button.addEventListener('click', (event) => {
+				this.handleClearData(button);
 			});
 		});
 
@@ -227,20 +234,6 @@ class QuizzBoi {
 			randomIndex = Math.floor(Math.random() * 4);
 			this.currentQuestionData[`${targetStage}Answers`][randomIndex] = this.currentQuestionData['targetWord'][`${targetStage}Data`];
 		}
-
-		// Add plausible incorrect pin yin to answer possibilities
-		// for (let i = 0; i < 4; i++) {
-		// 	let plausibleVariation;
-		// 	do {
-		// 		plausibleVariation = this.getPlausiblePinyinVariations(this.currentQuestionData.targetWord['pinYin']);
-		// 		console.log('pinYin:', plausibleVariation);
-		// 	} while (
-		// 		(this.currentQuestionData['pinYin'].includes(plausibleVariation) 
-		// 		|| 
-        // 		this.currentQuestionData.targetWord['pinYin'] === plausibleVariation) 
-		// 	);
-		// 	this.currentQuestionData['pinYin'].push(plausibleVariation);
-		// }
 
 		// console.log(this.currentQuestionData);
 	}
@@ -634,6 +627,7 @@ class QuizzBoi {
 	
 		if(button.name === 'stageQuantity') this.updateQuizStageQuantity(button.value);
 		if(button.name === 'pinYinMode') this.updatePinYinMode(button.value);
+		
 
 	
 		setTimeout(() => {
@@ -670,4 +664,31 @@ class QuizzBoi {
 	savePinYinMode() {
 		localStorage.setItem('hardPinYin', JSON.stringify(this.hardPinYinOn));
 	}
+
+	// Clear Data Logic
+
+	handleClearData(button) {
+		// this.settingUpdateInProgress logic prevents event bubbling and double calling
+		if (this.settingUpdateInProgress) return;
+		this.settingUpdateInProgress = true;
+	
+		if(button.id === 'clearStats') this.deleteSavedStats(button.id);
+		if(button.id === 'clearVocabData') this.deleteSavedVocab(button.id);
+	
+		setTimeout(() => {
+			this.settingUpdateInProgress = false; // Reset the flag
+		}, 300); 
+	}
+
+	deleteSavedStats() {
+		localStorage.removeItem('stats', JSON.stringify(this.stats));
+		this.stats = [];
+	}
+	
+	deleteSavedVocab() {
+		localStorage.removeItem('vocabulary', JSON.stringify(this.vocabulary));
+		this.vocabulary = [];
+	}
+
+	
 }
