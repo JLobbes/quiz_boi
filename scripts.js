@@ -5,21 +5,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
 class QuizzBoi { 
 	constructor() {
-		this.vocabulary;    // [ { Chinese: 'Chinese', pinYin: 'pin yin', English: 'English', sources: ['source sentence', ... ] } , ...]
+		this.vocabulary;    // [ { stageOneData: 'word', stageTwoData: 'meaning', stageThreeData: 'secondaryMeaning', sources: ['source sentence', ... ] } , ...]
 		this.loadVocabulary();
 
 		this.stats;         // { history: [], currentStreak: 0, highestStreak: 0, last50: 0, overallPercentage: 0, }
 		this.loadStats();
 
-		this.currentQuestionData; // { questiontext: 'text block', tartgetword: '', chinese: [ 'chinese1', 'chinese2', 'chinese3', 'chinese4' ], pinYin: [ 'pinYin1', 'pinYin2', 'pinYin3', 'pinYin4' ], english: [ 'english1', 'english2', 'english3', 'english4' ]  }
-		this.quizStage = { 
-			index: 0, 
-			stages: ['chinese', 'pinYin', 'english', 'next']
-		}; 
+		this.currentQuestionData; // { 
+								  // 	questiontext: 'text block', 
+								  // 	targetWord: { word: 'word', meaning: 'meaning', secondaryMeaning, 'secondaryMeaning' }, 
+								  //	stageOneAnswers:    [ 'random word 1', 'random word 2', 'random word 3', 'random word 4' ], 
+								  //	stageTwoAnswers: [ 'random meaning 1', 'random meaning 2', 'random meaning 3', 'random meaning 4' ], 
+								  //	stageThreeAnswers: [ 'random secondaryMeaning 1', 'random secondaryMeaning 2', 'random secondaryMeaning 3', 'random secondaryMeaning 4' ], 
+		this.currentStage = 1;
 		this.incorrectEmojis = { 
 			index: 0, 
 			emojis:['😟','😞','😭'] 
 		};
+
+		// Adjustable options
+		this.numOfStages = 3;  // Quantity of stages per given question
+		this.pinYinOn = false; // Create variations of correct pin yin
 
 	}
 
@@ -82,15 +88,22 @@ class QuizzBoi {
 
 		// Parse vocabulary by "-", store in new array
 		const parsedVocab = this.parseVocabulary(vocabInput); //  Does not yet contain example sentences
-		if(parsedVocab.length < 1) {
-			this.showNotification(`Please enter vocab in correct format (Chinese - PinYin - English)`);
+		if(parsedVocab.length < this.numOfStages) {
+
+			// Prepare format to show user
+			let properFormat = `Word`;
+			if(this.numOfStages = 2) properFormat += '- Meaning';
+			if(this.numOfStages = 3) properFormat += '- Secondary Meaning';
+
+			this.showNotification(`Please enter vocab in correct format (${properFormat})`);
+			
 			return;
 		}
 
 		// Match parsed vocab to the source text submitted
 		let emptyMatches = ''; 
 		parsedVocab.forEach((vocabWord) => {
-			const targetWord = vocabWord['chinese'];
+			const targetWord = vocabWord['stageOneData'];
 			const matches = this.findMatches(targetWord, sourceText);
 			if(matches) {
 				vocabWord['sources'] = [...matches]; 
@@ -98,9 +111,6 @@ class QuizzBoi {
 				emptyMatches = `${emptyMatches} ${targetWord}`;
 			}
 		})
-		if(emptyMatches != '') {
-			this.showNotification(`No matches found for ${emptyMatches}`);
-		}
 
 		// Filter out vocabWords with no matches
 		const filteredVocab = parsedVocab.filter(vocabWord => vocabWord['sources'] && vocabWord['sources'].length > 0);
@@ -127,8 +137,8 @@ class QuizzBoi {
 			if (line) {
 				const parts = line.split(' - ').map(part => part.trim());
 				if (parts.length === 3) {
-					const [chinese, pinYin, english] = parts;
-					vocabulary.push({ chinese, pinYin, english });
+					const [ stageOneData, stageTwoData, stageThreeData ] = parts;
+					vocabulary.push({ stageOneData, stageTwoData, stageThreeData });
 				}
 			}
 		});
@@ -155,7 +165,7 @@ class QuizzBoi {
 	// Quiz Logic
 
 	generateQuiz() {
-		this.quizStage.index = 0; // Reset quiz sequence 
+		this.currentStage = 1; // Reset quiz sequence 
 
 		if(this.vocabulary.length < 1) {
 			this.showNotification('Please add vocab data to begin quizzing.');
@@ -169,11 +179,11 @@ class QuizzBoi {
 	
 	generateQuestion() {
 		this.currentQuestionData = { 
-			targetWord: { chinese: 'target word', pinYin: 'pinYin', english: 'english' }, 
+			targetWord: { stageOneData: 'target word', stageTwoData: 'meaning', stageThreeData: 'secondaryMeaning' }, 
 			questionText: 'source text', 
-			chinese: [], // (4) Possible answers populated inside array
-			pinYin: [],  // (4) Possible answers populated inside array
-			english: []  // (4) Possible answers populated inside array
+			stageOneAnswers: [], // (4) Possible answers populated inside array
+			stageTwoAnswers: [],  // (4) Possible answers populated inside array
+			stageThreeAnswers: []  // (4) Possible answers populated inside array
 		}
 		
 		const randomVocab = this.getRandomVocab();
@@ -181,68 +191,46 @@ class QuizzBoi {
 		// Choose random source text from possible sources, replace target with blank
 		let randomIndex = Math.floor(Math.random() * randomVocab['sources'].length);
 		const randomLine = randomVocab['sources'][randomIndex];
-		const lineWithBlank = this.blankOutTargetWord(randomLine, randomVocab['chinese']);
+		const lineWithBlank = this.blankOutTargetWord(randomLine, randomVocab['stageOneData']);
 		this.currentQuestionData['questionText'] = lineWithBlank;
 		
 		// Update target word information
-		this.currentQuestionData['targetWord']['chinese'] = randomVocab['chinese'];
-		this.currentQuestionData['targetWord']['pinYin'] = randomVocab['pinYin'];
-		this.currentQuestionData['targetWord']['english'] = randomVocab['english'];
+		this.currentQuestionData['targetWord']['stageOneData'] = randomVocab['stageOneData'];
+		this.currentQuestionData['targetWord']['stageTwoData'] = randomVocab['stageTwoData'];
+		this.currentQuestionData['targetWord']['stageThreeData'] = randomVocab['stageThreeData'];
 
-		// Insert random answers for all blocks, all stages
-		// Randomly select Chinese answers from vocab bank as incorrect answers
-		for (let i = 0; i < 4; i++) {
-			let randomAnswer;
-			do {
-				const randomVocab = this.getRandomVocab();
-				randomAnswer = randomVocab['chinese'];
+		// Insert random answers for all question blocks, all stages
+		for (let i = 1; i <= this.numOfStages; i++) {
+			
+			const stages = {
+				1: 'stageOne',
+				2: 'stageTwo',
+				3: 'stageThree',
+			}
+			const targetStage = stages[i]; // Turns number into readable string
 
-			} while (
-				// Check for duplicate answers and re-draw if present
-				this.currentQuestionData['chinese'].includes(randomAnswer) 
-				||
-				this.currentQuestionData['targetWord']['chinese'] === randomAnswer
-			);
-			this.currentQuestionData['chinese'].push(randomAnswer);
+			for (let i = 0; i < 4; i++) { // Each question block has (4) random answers selected
+				this.supplyRandomAnswer(targetStage);
+			}
+
+			// One random question block has its answer overwrote with the correct answer
+			randomIndex = Math.floor(Math.random() * 4);
+			this.currentQuestionData[`${targetStage}Answers`][randomIndex] = this.currentQuestionData['targetWord'][`${targetStage}Data`];
 		}
 
 		// Add plausible incorrect pin yin to answer possibilities
-		for (let i = 0; i < 4; i++) {
-			let plausibleVariation;
-			do {
-				plausibleVariation = this.getPlausiblePinyinVariations(this.currentQuestionData.targetWord['pinYin']);
-				console.log('pinYin:', plausibleVariation);
-			} while (
-				(this.currentQuestionData['pinYin'].includes(plausibleVariation) 
-				|| 
-        		this.currentQuestionData.targetWord['pinYin'] === plausibleVariation) 
-			);
-			this.currentQuestionData['pinYin'].push(plausibleVariation);
-		}
-
-		// Randomly select English answers from vocab bank as incorrect answers
-		for (let i = 0; i < 4; i++) {
-			let randomAnswer;
-			do {
-				const randomVocab = this.getRandomVocab();
-				randomAnswer = randomVocab['english'];
-
-			} while (
-				// Check for duplicate answers and re-draw if present
-				this.currentQuestionData['english'].includes(randomAnswer) 
-				||
-				this.currentQuestionData['targetWord']['english'] === randomAnswer
-			);
-			this.currentQuestionData['english'].push(randomAnswer);
-		}
-
-		// Randomly insert correct answers into questionData options
-		randomIndex = Math.floor(Math.random() * 4);
-		this.currentQuestionData['chinese'][randomIndex] = this.currentQuestionData['targetWord']['chinese'];
-		randomIndex = Math.floor(Math.random() * 4);
-		this.currentQuestionData['pinYin'][randomIndex] = this.currentQuestionData['targetWord']['pinYin'];
-		randomIndex = Math.floor(Math.random() * 4);
-		this.currentQuestionData['english'][randomIndex] = this.currentQuestionData['targetWord']['english'];
+		// for (let i = 0; i < 4; i++) {
+		// 	let plausibleVariation;
+		// 	do {
+		// 		plausibleVariation = this.getPlausiblePinyinVariations(this.currentQuestionData.targetWord['pinYin']);
+		// 		console.log('pinYin:', plausibleVariation);
+		// 	} while (
+		// 		(this.currentQuestionData['pinYin'].includes(plausibleVariation) 
+		// 		|| 
+        // 		this.currentQuestionData.targetWord['pinYin'] === plausibleVariation) 
+		// 	);
+		// 	this.currentQuestionData['pinYin'].push(plausibleVariation);
+		// }
 
 		// console.log(this.currentQuestionData);
 	}
@@ -251,6 +239,22 @@ class QuizzBoi {
 		const randomIndex = Math.floor(Math.random() * this.vocabulary.length);
 	
 		return { ...this.vocabulary[randomIndex] }; // Return a shallow copy of the random object
+	}
+
+	supplyRandomAnswer(targetStage) {
+		let randomAnswer;
+		
+		do {
+			const randomVocab = this.getRandomVocab();
+			randomAnswer = randomVocab[`${targetStage}Data`];
+
+		} while (
+			// Check for duplicate answers and re-draw if present
+			this.currentQuestionData[`${targetStage}Answers`].includes(randomAnswer) 
+			||
+			this.currentQuestionData['targetWord'][`${targetStage}Data`] === randomAnswer
+		);
+		this.currentQuestionData[`${targetStage}Answers`].push(randomAnswer);
 	}
 	
 	getPlausiblePinyinVariations(originalPinYin) {
@@ -315,22 +319,26 @@ class QuizzBoi {
 	renderQuiz() {
 		this.incorrectEmojis.index = 0; // Reset sad emoji sequence
 		
-		// The quiz has (3) stages: (i) Chinese, (ii) pin yin, and (iii) English.
-		// Each section is rendered in sequence, only after the previous is completed.
-		const quizStage = this.quizStage.stages[this.quizStage.index]
+		// The quiz has multiple stages
+		// Each section is rendered in sequence, only after the previous stages  is completed.
+		const stages = {
+			1: 'stageOne',
+			2: 'stageTwo',
+			3: 'stageThree',
+		}
+		const currentStage = stages[this.currentStage]; // Turns number into readable string
 
-		const quizFinished = this.quizStage.index >= 3; 
+		const quizFinished = this.currentStage > 3; 
 		if(quizFinished) {
 			this.navigateToNextQuestion(); 
 			return;
 		}
 
 		const question = document.createElement('p');
-		if(quizStage === 'chinese') {
+		if(currentStage === 'stageOne') {
 			question.innerText = this.currentQuestionData['questionText'];
 		} else {
-			question.innerText = `${quizStage} for: ${this.currentQuestionData.targetWord['chinese']}`
-
+			question.innerText = `Select the suitable match for: ${this.currentQuestionData.targetWord['stageOneData']}`
 		}
 
 		const questionBlock = document.getElementById('question');
@@ -344,16 +352,25 @@ class QuizzBoi {
 
 			// Add the approriate text to each answer block
 			const possibleAnswer = document.createElement('p');
-			possibleAnswer.innerText = this.currentQuestionData[`${quizStage}`][i];
+			possibleAnswer.innerText = this.currentQuestionData[`${currentStage}Answers`][i];
 			block.appendChild(possibleAnswer);
 		}
 	}
 
 	checkAnswer(targetButton) {
 
+		// The quiz has multiple stages
+		// Each section is rendered in sequence, only after the previous stages  is completed.
+		const stages = {
+			1: 'stageOne',
+			2: 'stageTwo',
+			3: 'stageThree',
+		}
+		const currentStage = stages[this.currentStage]; // Turns number into readable string
+
 		// Check for matching answer
 		const chosenAnswer = targetButton.innerText;
-		const correctAnswer = this.currentQuestionData['targetWord'][this.quizStage.stages[this.quizStage.index]];
+		const correctAnswer = this.currentQuestionData['targetWord'][`${currentStage}Data`];
 		const correct = chosenAnswer === correctAnswer;
 
 		// Remove button and show if correct or incorrect
@@ -362,7 +379,7 @@ class QuizzBoi {
 
 			setTimeout(() => {
 				// Advance to next quiz stage
-				this.quizStage.index++; // Only advance quiz if correct answer hit.
+				this.currentStage++; // Only advance quiz if correct answer hit.
 				this.renderQuiz();
 			}, 400);
 		} else {

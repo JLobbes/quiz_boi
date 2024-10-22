@@ -37,10 +37,10 @@
 					<div id="answerDelta" class="answer-block" tabindex="0"></div>
 				</div>
 			</div>
-		</div>
+		</div>	
 
 		<div id="nextQuestionMenu" class="menuWrapper hidden">
-			<button id="navToNextQuestion" class="main-button unselectable">Next  >>></button>
+			<button id="navToNextQuestion" class="main-button">Next  >>></button>
 		</div>
 		
 		<div id="statsMenu" class="menuWrapper hidden">
@@ -85,17 +85,15 @@
 		<div id="settingsMenu" class="menuWrapper hidden">
 			<div id="settingsTableWrapper">
 				<div class="setting">
-					<div id="quizModeOption" class="setting-description">
-						<p>Quiz Mode:</p>
+					<div id="quizStageQuantity" class="setting-description">
+						<p>Quanity of Stages:</p>
 					</div>
-					<label>
-						<input type="radio" name="mode" id="mode-eng" value="english" checked>
-						Eng.
-					</label>
-					<label>
-						<input type="radio" name="mode" id="mode-zh" value="chinese">
-						Chn.
-					</label>
+					<div class="setting-options">
+						<label>
+							<input type="radio" name="stageQuantity" id="mode-eng" value="english" checked>
+							1
+						</label>
+					</div>
 				</div>
 			</div>
 		</div>

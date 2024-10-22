@@ -282,12 +282,10 @@ textarea::placeholder {
 	flex-direction: column;
 	justify-content: center; 
 	align-items: center;
-	flex-wrap: wrap;
 
 	width: 100%;
 	height: fit-content;
 	overflow-y: scroll;
-	margin: 0.25em;
 
 	box-sizing: border-box;
 }
@@ -296,41 +294,52 @@ textarea::placeholder {
 	width: 0;
 }
 
-.settings-column {
-	display: grid;
-	grid-template-rows: 1fr 1fr 1fr 1fr;
-
-    width: 98%;
-    height: 98%;
-
-	box-sizing: border-box;
-}
-
 .setting {
 	display: flex;
 	flex-direction: row;
-	justify-content: center; 
+	justify-content: center;
 	align-items: center;
 	
-	width: 100%;
-	height: 100%;
-	margin: 0px;
+	width: calc(100% - 0.5em);
+	height: 4em;
+	margin: 0.25em;
 	
 	border-radius: 3px;
-	border: #eee dashed 1.5px;
+	border: #eee groove 5px;
 	box-sizing: border-box;
 }
 
 .setting-description {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+
+	width: 50%;
+
 	font-weight: bold;
+}
+
+.setting-options {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+
+	width: 50%;
+}
+
+.setting p {
+	display: block;
+
+	width: fit-content;
+	margin: 0;
+	box-sizing: border-box;
 }
 
 /* Settings Menu -> Quiz Mode */
 
-#quizModeOption {
-	display: grid;
-	grid-template-columns: 3fr 1fr;
-}
+
 
 /* Communication elements */
 
