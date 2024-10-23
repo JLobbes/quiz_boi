@@ -24,12 +24,17 @@ class QuizzBoi {
 		};
 
 		// Settings
+		this.settingUpdateInProgress = false;
+		
 		this.numOfStages = 3;  // Quantity of stages per given question
 		this.loadQuizStageQuantity();
 		
 		this.hardPinYinOn = false; // Create variations of correct pin yin
 		this.loadPinYinMode();
-		this.settingUpdateInProgress = false;
+
+		this.surroundingCharLength = 25;
+		this.loadSurroundingCharLength();
+		
 	}
 
 	loadListeners() { 
@@ -170,8 +175,8 @@ class QuizzBoi {
 	
 		// Find all matches and their indexes
 		while ((match = regex.exec(sourceText)) !== null) {
-			const startIndex = Math.max(match.index - 25, 0); // Start index with a minimum of 0
-			const endIndex = Math.min(match.index + targetWord.length + 25, sourceText.length); // End index within bounds
+			const startIndex = Math.max(match.index - this.surroundingCharLength, 0); // Start index with a minimum of 0
+			const endIndex = Math.min(match.index + targetWord.length + this.surroundingCharLength, sourceText.length); // End index within bounds
 			const context = sourceText.slice(startIndex, endIndex).replace(/\n/g, '').trim(); // Remove \n and trim
 			matches.push(context); 
 		}
@@ -627,8 +632,7 @@ class QuizzBoi {
 	
 		if(button.name === 'stageQuantity') this.updateQuizStageQuantity(button.value);
 		if(button.name === 'pinYinMode') this.updatePinYinMode(button.value);
-		
-
+		if(button.name === 'surroundingCharLength') this.updateSurroundingCharLength(button.value);
 	
 		setTimeout(() => {
 			this.settingUpdateInProgress = false; // Reset the flag
@@ -652,7 +656,7 @@ class QuizzBoi {
 
 	updatePinYinMode(newMode) {
 		this.hardPinYinOn = (newMode === 'on') ? true : false;
-		this.showNotification(`Difficult pin yin mode is now ${newMode}. Ensure PinYin data is as second stage.`);
+		this.showNotification(`Difficult pin yin mode is now ${newMode}.`);
 		this.savePinYinMode();
 	}
 
@@ -663,6 +667,22 @@ class QuizzBoi {
 
 	savePinYinMode() {
 		localStorage.setItem('hardPinYin', JSON.stringify(this.hardPinYinOn));
+	}
+
+	updateSurroundingCharLength(newLength) {
+		const convertToNum = Number(newLength)
+		this.surroundingCharLength = (convertToNum) ? convertToNum : 25;
+		this.showNotification(`Surrounding character length is now ${newLength}.`);
+		this.saveSurroundingCharLength();
+	}
+
+	loadSurroundingCharLength() {
+		const surroundingCharLength = localStorage.getItem('surroundingCharacterLength');
+		this.surroundingCharLength = surroundingCharLength ? JSON.parse(surroundingCharLength) : 25;
+	}
+
+	saveSurroundingCharLength() {
+		localStorage.setItem('surroundingCharacterLength', JSON.stringify(this.surroundingCharLength));
 	}
 
 	// Clear Data Logic
