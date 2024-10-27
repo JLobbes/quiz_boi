@@ -63,6 +63,11 @@ body {
 	width: 100%;
 }
 
+button {
+	/* This is trying to patch an issue on mobile */
+	text-align: center;
+}
+
 .main-button {
 	display: block;
 	
@@ -200,7 +205,15 @@ textarea::placeholder {
 }
 
 .answer-block p {
+	overflow-x: auto;
+	white-space: nowrap;
+	width: 100px;
 	margin: 0;
+	text-align: center;
+}
+
+.answer-block p::-webkit-scrollbar {
+	height: 0px;
 }
 
 @keyframes jiggle {

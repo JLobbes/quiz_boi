@@ -251,38 +251,50 @@ class QuizzBoi {
 
 	supplyRandomAnswer(targetStage) {
 		let randomAnswer;
-		
+
+		// Prevent infinity draw when there are inadequate # of answers
+		let attempts = 0; 
+		const maxAttempts = 20; 
+	
 		do {
 			const randomVocab = this.getRandomVocab();
 			randomAnswer = randomVocab[`${targetStage}Data`];
-
-			if(targetStage === 'stageTwo' && this.hardPinYinOn) {
+	
+			if (targetStage === 'stageTwo' && this.hardPinYinOn && this.currentQuestionData.targetWord['stageOneData'].length > 1) {
 				try {
 					randomAnswer = this.getPlausiblePinyinVariations(this.currentQuestionData['targetWord'][`${targetStage}Data`]);				
-				}
-				catch(error) {
+					console.log('Hard PinYin:', randomAnswer);
+				} catch (error) {
 					console.error('Your second stage data include words without pin yin tones. Hard Pin Yin mode must be turned off');
 					this.updatePinYinMode('off');
 				}
 			}
+			attempts++;
 		} while (
-			// Check for duplicate answers and re-draw if present
-			this.currentQuestionData[`${targetStage}Answers`].includes(randomAnswer) 
-			||
-			this.currentQuestionData['targetWord'][`${targetStage}Data`] === randomAnswer
+			attempts < maxAttempts &&
+			(this.currentQuestionData[`${targetStage}Answers`].includes(randomAnswer) || 
+			 this.currentQuestionData['targetWord'][`${targetStage}Data`] === randomAnswer)
 		);
-		this.currentQuestionData[`${targetStage}Answers`].push(randomAnswer);
+	
+		if (attempts < maxAttempts) {
+			this.currentQuestionData[`${targetStage}Answers`].push(randomAnswer);
+		} else {
+			this.currentQuestionData[`${targetStage}Answers`].push('...');
+			console.warn('Max attempts reached. No new random answer found.');
+		}
 	}
 	
 	getPlausiblePinyinVariations(originalPinYin) {
 		const toneVariations = {
 			'ā': ['á', 'ǎ', 'à', 'ā'],
 			'á': ['ā', 'ǎ', 'à', 'á'],
+			'ă': ['ā', 'á', 'à', 'ǎ'],
 			'ǎ': ['ā', 'á', 'à', 'ǎ'],
 			'à': ['ā', 'á', 'ǎ', 'à'],
 			'ō': ['ó', 'ǒ', 'ò', 'ō'],
 			'ó': ['ō', 'ǒ', 'ò', 'ó'],
 			'ǒ': ['ō', 'ó', 'ò', 'ǒ'],
+			'ŏ': ['ō', 'ó', 'ò', 'ǒ'],
 			'ò': ['ō', 'ó', 'ǒ', 'ò'],
 			'ē': ['é', 'ě', 'è', 'ē'],
 			'é': ['ē', 'ě', 'è', 'é'],
@@ -291,10 +303,12 @@ class QuizzBoi {
 			'ī': ['í', 'ĭ', 'ì', 'ī'],
 			'í': ['ī', 'ĭ', 'ì', 'í'],
 			'ĭ': ['ī', 'í', 'ì', 'ĭ'],
+			'ǐ': ['ī', 'í', 'ì', 'ĭ'],
 			'ì': ['ī', 'í', 'ĭ', 'ì'],
 			'ū': ['ú', 'ǔ', 'ù', 'ū'],
 			'ú': ['ū', 'ǔ', 'ù', 'ú'],
 			'ǔ': ['ū', 'ú', 'ù', 'ǔ'],
+			'ŭ': ['ū', 'ú', 'ù', 'ǔ'],
 			'ù': ['ū', 'ú', 'ǔ', 'ù'],
 			'ǖ': ['ǘ', 'ǚ', 'ǜ', 'ǖ'],
 			'ǘ': ['ǖ', 'ǚ', 'ǜ', 'ǘ'],
@@ -670,7 +684,7 @@ class QuizzBoi {
 	}
 
 	updateSurroundingCharLength(newLength) {
-		const convertToNum = Number(newLength)
+		const convertToNum = Number(newLength);
 		this.surroundingCharLength = (convertToNum) ? convertToNum : 25;
 		this.showNotification(`Surrounding character length is now ${newLength}.`);
 		this.saveSurroundingCharLength();
@@ -703,11 +717,14 @@ class QuizzBoi {
 	deleteSavedStats() {
 		localStorage.removeItem('stats', JSON.stringify(this.stats));
 		this.stats = [];
+		this.loadStats(); // Loads blank stats
+		this.showNotification('Stats cleared.');
 	}
 	
 	deleteSavedVocab() {
 		localStorage.removeItem('vocabulary', JSON.stringify(this.vocabulary));
 		this.vocabulary = [];
+		this.showNotification('Vocabulary cleared.');
 	}
 
 	
