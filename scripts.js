@@ -110,7 +110,7 @@ class QuizzBoi {
 
 		// Parse vocabulary by "-", store in new array
 		const parsedVocab = this.parseVocabulary(vocabInput); //  Does not yet contain example sentences
-		if(parsedVocab.length < this.numOfStages) {
+		if(parsedVocab.length < 1) {
 
 			// Prepare format to show user
 			let properFormat = `Word`;
@@ -164,12 +164,12 @@ class QuizzBoi {
 				}
 			}
 		});
-
+		
 		return vocabulary;
 	}
 
 	findMatches(targetWord, sourceText) {
-		const regex = new RegExp(targetWord, 'g'); 
+		const regex = new RegExp(`(?:^|[\\s.,;:!?'"(){}\\[\\]<>-_])${targetWord}(?:$|[\\s.,;:!?'"(){}\\[\\]<>-_])`, 'g');
 		const matches = [];
 		let match;
 	
@@ -719,6 +719,7 @@ class QuizzBoi {
 		this.stats = [];
 		this.loadStats(); // Loads blank stats
 		this.showNotification('Stats cleared.');
+		this.renderStatistics();
 	}
 	
 	deleteSavedVocab() {
