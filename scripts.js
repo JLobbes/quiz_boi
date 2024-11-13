@@ -169,7 +169,7 @@ class QuizzBoi {
 	}
 
 	findMatches(targetWord, sourceText) {
-		const regex = new RegExp(`(?:^|[\\s.,;:!?'"(){}\\[\\]<>-_])${targetWord}(?:$|[\\s.,;:!?'"(){}\\[\\]<>-_])`, 'g');
+		const regex = new RegExp(`(?:^|[\\s.,;:!?"(){}\\[\\]<>-_])${targetWord}(?:$|[\\s.,;:!?"(){}\\[\\]<>-_])`, 'g');
 		const matches = [];
 		let match;
 	
@@ -343,7 +343,7 @@ class QuizzBoi {
 	}
 	
 	blankOutTargetWord(line, targetWord) {
-		const regex = new RegExp(targetWord, 'g'); // Create a regex for the target word
+		const regex = new RegExp(`(?:^|[\\s.,;:!?"(){}\\[\\]<>-_])${targetWord}(?:$|[\\s.,;:!?"(){}\\[\\]<>-_])`, 'g');
 		return line.replace(regex, '__'); // Replace the target word with blanks
 	}
 
