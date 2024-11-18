@@ -343,8 +343,13 @@ class QuizzBoi {
 	}
 	
 	blankOutTargetWord(line, targetWord) {
-		const regex = new RegExp(`(?:^|[\\s.,;:!?"(){}\\[\\]<>-_])${targetWord}(?:$|[\\s.,;:!?"(){}\\[\\]<>-_])`, 'g');
-		return line.replace(regex, '__'); // Replace the target word with blanks
+		// Regex to match the target word along with surrounding punctuation
+		const regex = new RegExp(`([\\s.,;:!?(){}\\[\\]<>-_]*)(\\b${targetWord}\\b)([\\s.,;:!?(){}\\[\\]<>-_]*)`, 'g');
+		
+		// Replace the target word with blanks, preserving punctuation
+		return line.replace(regex, (match, before, word, after) => {
+			return before + ' __ ' + after; // Reconstruct the string with blank and punctuation intact
+		});
 	}
 
 	renderQuiz() {
